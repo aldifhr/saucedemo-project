@@ -92,6 +92,16 @@ test.describe('Product - Positive', () => {
         await expect(page).toHaveURL(/inventory\.html/);
         await expect(inventoryPage.itemCards.first()).toBeVisible();
     });
+
+    // PROD011 - Positive - Remove from inventory (complement PROD005)
+    test('PROD011 - should remove product from inventory and badge disappears', async ({ page }) => {
+        await inventoryPage.addFirstItemToCart();
+        await expect(inventoryPage.cartBadge).toHaveText('1');
+        await expect(page.locator('button[data-test^="remove"]').first()).toBeVisible();
+        await page.locator('button[data-test^="remove"]').first().click();
+        await expect(page.locator('button[data-test^="add-to-cart"]').first()).toBeVisible();
+        await expect(inventoryPage.cartBadge).toBeHidden();
+    });
 });
 
 test.describe('Product - Negative', () => {
